@@ -1,0 +1,85 @@
+#include <QCoreApplication>
+#include <iostream>
+#include <qtimer.h>
+#include <QtSql>
+
+int main(int argc, char *argv[])
+{
+    const double pi = 3.14;
+    QCoreApplication a(argc, argv);
+    QSqlDatabase db;
+    QSqlQuery query;
+    double val = 0;
+    int k = 10;
+    std::string ss;
+
+    std::cout << "checking database" << std::endl;
+    db = QSqlDatabase::addDatabase("QMYSQL","conn_name1");
+    db.setHostName("localhost");
+    db.setUserName("root");
+    db.setPassword("12345");
+
+    db.open();
+    std::cout << std::string(db.lastError().text().toUtf8()) << std::endl;
+    std::cout << "try to create database 'wavedb'" << std::endl;
+    query = QSqlQuery(db);
+    if(!query.exec("CREATE DATABASE wavedb DEFAULT CHARACTER SET cp1251 COLLATE cp1251_general_ci"))
+        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+
+    db.close();
+    db.setDatabaseName("wavedb");
+    db.open();
+    query = QSqlQuery(db);
+//    query.exec("use wavedb");         или это вместо верхних четырех строчек
+
+    std::cout << "delete table 'line'" << std::endl;
+    if(!query.exec("DROP TABLE line"))
+        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+    std::cout << "try to create table 'line'" << std::endl;
+//    if(!query.exec("CREATE TABLE line (keyid bigint unsigned AUTO_INCREMENT PRIMARY KEY, id int unsigned , value real) ENGINE=MyISAM"))
+    if(!query.exec("CREATE TABLE line (keyid bigint unsigned AUTO_INCREMENT PRIMARY KEY, id int unsigned , value real)"))
+        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+    std::cout << "fill table 'line' with values" << std::endl;
+    query.prepare("INSERT INTO line(id,value) VALUES(:id,:value)");
+    for(int i=0; i<1000; i++)
+    {
+        query.bindValue(":id",i);
+        query.bindValue(":value",val);
+        query.exec();
+        val += k;
+        if(val >= 100) k = -10;
+        if(val <= -100) k = 10;
+    }
+
+    std::cout << "delete table 'sin'" << std::endl;
+    if(!query.exec("DROP TABLE sin"))
+        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+    std::cout << "try to create table 'sin'" << std::endl;
+//    if(!query.exec("CREATE TABLE sin (keyid bigint unsigned AUTO_INCREMENT PRIMARY KEY, id int unsigned, value real) ENGINE=MyISAM"))
+    if(!query.exec("CREATE TABLE sin (keyid bigint unsigned AUTO_INCREMENT PRIMARY KEY, id int unsigned, value real)"))
+        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+
+    std::cout << "fill table 'sin' with values" << std::endl;
+    QFile sinfile("d:/sin.csv");
+//    sinfile.remove(); writeonly вроде как должен пересоздавать файл
+    sinfile.open(QFile::WriteOnly);
+//    sinfile.write("id;value\n");
+    for(int i=0; i<1000; i++)
+    {
+        val = 100*sin(2*pi/1000*i);
+        ss = "0;";
+        ss += std::to_string(i);
+        ss += ";";
+        ss += std::to_string(val);
+        ss += "\n";
+        sinfile.write(ss.c_str());
+    }
+    sinfile.close();
+    query.exec("SET GLOBAL local_infile = 1");
+    query.exec("LOAD DATA LOCAL INFILE 'd:/sin.csv' INTO TABLE sin FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' SET keyid=DEFAULT");
+    std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
+
+    db.close();
+    QTimer::singleShot(500, &a, SLOT(quit())); //stop after 500 ms
+    return a.exec();
+}
