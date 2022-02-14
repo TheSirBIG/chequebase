@@ -19,24 +19,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     adddoubledialog.cpp \
     addsingledialog.cpp \
-    dialog1.cpp \
     main.cpp \
-    mainwindow.cpp \
-    wnd2.cpp
+    mainwindow.cpp
 
 HEADERS += \
     adddoubledialog.h \
     addsingledialog.h \
-    dialog1.h \
-    mainwindow.h \
-    wnd2.h
+    mainwindow.h
 
 FORMS += \
     adddoubledialog.ui \
     addsingledialog.ui \
-    dialog1.ui \
-    mainwindow.ui \
-    wnd2.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

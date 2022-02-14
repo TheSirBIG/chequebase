@@ -13,3 +13,9 @@ AddDoubleDialog::~AddDoubleDialog()
 {
     delete ui;
 }
+
+void AddDoubleDialog::on_buttonBox_accepted()
+{
+    outstring1 = ui->lineEdit->text();
+    outstring2 = ui->lineEdit_2->text();
+}

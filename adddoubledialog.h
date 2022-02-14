@@ -20,6 +20,8 @@ private:
 
 public:
     QString outstring1, outstring2;
+private slots:
+    void on_buttonBox_accepted();
 };
 
 #endif // ADDDOUBLEDIALOG_H

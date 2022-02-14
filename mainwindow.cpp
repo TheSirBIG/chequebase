@@ -11,16 +11,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     dbconnected = DBConnect();
 
-    window_2 = new Wnd2();
-    dialog1 = new Dialog1(this);
-//    dialog1 = new Dialog1();
 }
 
 MainWindow::~MainWindow()
 {
     if(dbconnected) db.close();
-    delete window_2;
-    delete dialog1;
     if(vendorList != nullptr) delete vendorList;
     if(storeList != nullptr) delete storeList;
     if(prodList != nullptr) delete prodList;
@@ -65,25 +60,23 @@ bool MainWindow::DBConnect()
                name varchar(255) not null)");
     query.exec("create table if not exists store(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
-               name varchar(255))");
+               name varchar(255) not null)");
     query.exec("create table if not exists prodtype(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
                type varchar(255) not null,\
-               subtype varchar(255))");
+               subtype varchar(255) default null)");
     query.exec("create table if not exists chequelist(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
                dateofbuy date not null default CURRENT_DATE,\
                storeid int,\
                vendorid int,\
-               prodtypeid int not null,\
-               prodsubtypeid int,\
+               prodtypeid int,\
                quantity float not null,\
                price float not null,\
                action bool not null default false,\
                foreign key (storeid) references store(keyid),\
                foreign key (vendorid) references vendor(keyid),\
                foreign key (prodtypeid) references prodtype(keyid),\
-               foreign key (prodsubtypeid) references prodsubtype(keyid),\
                index (prodtypeid))");
 
 //    query.exec("insert into vendor(name) values('магнит')");
@@ -174,7 +167,8 @@ void MainWindow::on_addProdButton_released()
         }
         else
         {
-
+            query.prepare("insert into prodtype(type) values(:type)");
+            query.bindValue(":type", dialog->outstring1);
         }
         if(!query.exec())
         {

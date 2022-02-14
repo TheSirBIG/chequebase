@@ -1,8 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "wnd2.h"
-#include "dialog1.h"
 #include <QMainWindow>
 #include <QtSql>
 #include <QMessageBox>
@@ -38,8 +36,6 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    Wnd2 *window_2;
-    Dialog1 *dialog1;
     bool dbconnected;
     QSqlError lastError;
     QSqlDatabase db;
