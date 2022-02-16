@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include <iostream>
+#include <iostream>
 #include "addsingledialog.h"
 #include "adddoubledialog.h"
 
@@ -10,7 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     dbconnected = DBConnect();
-
+    if(dbconnected)
+    {
+        GetStoreList();
+        GetProdList();
+        GetVendorList();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -61,23 +66,23 @@ bool MainWindow::DBConnect()
     query.exec("create table if not exists store(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
                name varchar(255) not null)");
-    query.exec("create table if not exists prodtype(\
+    query.exec("create table if not exists prod(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
-               type varchar(255) not null,\
-               subtype varchar(255) default null)");
+               name varchar(255) not null,\
+               subname varchar(255) default null)");
     query.exec("create table if not exists chequelist(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
                dateofbuy date not null default CURRENT_DATE,\
                storeid int,\
                vendorid int,\
-               prodtypeid int,\
+               prodid int,\
                quantity float not null,\
                price float not null,\
                action bool not null default false,\
                foreign key (storeid) references store(keyid),\
                foreign key (vendorid) references vendor(keyid),\
-               foreign key (prodtypeid) references prodtype(keyid),\
-               index (prodtypeid))");
+               foreign key (prodid) references prod(keyid),\
+               index (prodid))");
 
 //    query.exec("insert into vendor(name) values('магнит')");
 //    if(!query.exec("insert into vendor(name) values('магнит')"))
@@ -102,6 +107,55 @@ void MainWindow::GetVendorList()
         {
             vendorList[i++] = query.value(0).toInt();
             ui->vendorCB->addItem(query.value(1).toString());
+        }
+    }
+}
+
+void MainWindow::GetStoreList()
+{
+    QSqlQuery query;
+    int i = 0;
+
+    if(storeList != nullptr) delete storeList;
+    storeList = nullptr;
+    ui->storeCB->clear();
+    query = QSqlQuery(db);
+    query.exec("select * from store");
+    if(query.isSelect())
+    {
+        if(query.size()>0) storeList = new int[query.size()];
+        while(query.next())
+        {
+            storeList[i++] = query.value(0).toInt();
+            ui->storeCB->addItem(query.value(1).toString());
+        }
+    }
+}
+
+void MainWindow::GetProdList()
+{
+    QSqlQuery query;
+    QString str;
+    int i = 0;
+
+    if(prodList != nullptr) delete prodList;
+    prodList = nullptr;
+    ui->prodCB->clear();
+    query = QSqlQuery(db);
+    query.exec("select * from prod");
+    if(query.isSelect())
+    {
+        if(query.size()>0) prodList = new int[query.size()];
+        while(query.next())
+        {
+            str = query.value(1).toString();
+            if(query.value(2) != "")
+            {
+                str += ", ";
+                str += query.value(2).toString();
+            }
+            prodList[i++] = query.value(0).toInt();
+            ui->prodCB->addItem(str);
         }
     }
 }
@@ -161,14 +215,14 @@ void MainWindow::on_addProdButton_released()
         QSqlQuery query = QSqlQuery(db);
         if(dialog->outstring2 != "")
         {
-            query.prepare("insert into prodtype(type,subtype) values(:type,:subtype)");
-            query.bindValue(":type", dialog->outstring1);
-            query.bindValue(":subtype", dialog->outstring2);
+            query.prepare("insert into prod(name,subname) values(:name,:subname)");
+            query.bindValue(":name", dialog->outstring1);
+            query.bindValue(":subname", dialog->outstring2);
         }
         else
         {
-            query.prepare("insert into prodtype(type) values(:type)");
-            query.bindValue(":type", dialog->outstring1);
+            query.prepare("insert into prod(name) values(:name)");
+            query.bindValue(":name", dialog->outstring1);
         }
         if(!query.exec())
         {

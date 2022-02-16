@@ -31,8 +31,8 @@ private slots:
 private:
     bool DBConnect();
     void GetVendorList();
-    void GetStoreNameList();
-    void GetStoreAddrList();
+    void GetStoreList();
+    void GetProdList();
 
 private:
     Ui::MainWindow *ui;
