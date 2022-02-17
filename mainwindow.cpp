@@ -9,13 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    dbconnected = DBConnect();
-    if(dbconnected)
-    {
-        GetStoreList();
-        GetProdList();
-        GetVendorList();
-    }
+    ui->dateEdit->setDate(QDate::currentDate());
+    ui->actionCBox->setCheckState(Qt::Unchecked);
+    on_reconnectButton_released();
 }
 
 MainWindow::~MainWindow()
@@ -27,19 +23,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*
-void MainWindow::on_pushButton_released()
+void MainWindow::on_reconnectButton_released()
 {
-    this->close();
-    window_2->show1(this);
+    if(dbconnected) db.close();
+    dbconnected = DBConnect();
+    if(dbconnected)
+    {
+        GetStoreList();
+        GetProdList();
+        GetVendorList();
+    }
 }
 
-void MainWindow::on_pushButton_2_released()
-{
-    //dialog1->show();
-    dialog1->exec();
-}
-*/
 bool MainWindow::DBConnect()
 {
     QSqlQuery query;
@@ -58,7 +53,6 @@ bool MainWindow::DBConnect()
     //creating database if not exists
     query = QSqlQuery(db);
     query.exec("CREATE DATABASE if not exists cheque DEFAULT CHARACTER SET cp1251 COLLATE cp1251_general_ci");
-//    query.exec("CREATE DATABASE if not exists cheque");
     query.exec("use cheque");
     query.exec("create table if not exists vendor(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
@@ -72,7 +66,7 @@ bool MainWindow::DBConnect()
                subname varchar(255) default null)");
     query.exec("create table if not exists chequelist(\
                keyid int AUTO_INCREMENT PRIMARY KEY,\
-               dateofbuy date not null default CURRENT_DATE,\
+               dateofbuy date not null,\
                storeid int,\
                vendorid int,\
                prodid int,\
@@ -83,10 +77,6 @@ bool MainWindow::DBConnect()
                foreign key (vendorid) references vendor(keyid),\
                foreign key (prodid) references prod(keyid),\
                index (prodid))");
-
-//    query.exec("insert into vendor(name) values('магнит')");
-//    if(!query.exec("insert into vendor(name) values('магнит')"))
-//        std::cout << std::string(query.lastError().text().toUtf8()) << std::endl;
             return(true);
 }
 
@@ -160,16 +150,6 @@ void MainWindow::GetProdList()
     }
 }
 
-void MainWindow::on_reconnectButton_released()
-{
-    if(!dbconnected) dbconnected = DBConnect();
-}
-
-void MainWindow::on_pushButton_released()
-{
-    GetVendorList();
-}
-
 void MainWindow::on_addVendorButton_released()
 {
     AddSingleDialog *dialog = new AddSingleDialog();
@@ -186,6 +166,7 @@ void MainWindow::on_addVendorButton_released()
         }
     }
     delete dialog;
+    GetVendorList();
 }
 
 void MainWindow::on_addStoreButton_released()
@@ -204,6 +185,7 @@ void MainWindow::on_addStoreButton_released()
         }
     }
     delete dialog;
+    GetStoreList();
 }
 
 void MainWindow::on_addProdButton_released()
@@ -230,4 +212,66 @@ void MainWindow::on_addProdButton_released()
         }
     }
     delete dialog;
+    GetProdList();
+}
+
+void MainWindow::on_addButton_released()
+{
+    float quantity, price;
+    bool ok;
+    QString res;
+    QDate date;
+
+    res = ui->quantityEdit->text();
+    for(int i=0; i<res.length(); i++)
+        if(res[i] == ',') res[i] = '.';
+    quantity = res.toFloat(&ok);
+    if(!ok)
+    {
+        QMessageBox::critical(this,"Error","Error in quantity edit\n");
+        ui->quantityEdit->clear();
+    }
+    else
+    {
+        res = ui->priceEdit->text();
+        for(int i=0; i<res.length(); i++)
+            if(res[i] == ',') res[i] = '.';
+        price = res.toFloat(&ok);
+        if(!ok)
+        {
+            QMessageBox::critical(this,"Error","Error in price edit\n");
+            ui->priceEdit->clear();
+        }
+        else
+        {
+            date = ui->dateEdit->date();
+            QSqlQuery query = QSqlQuery(db);
+            query.prepare("INSERT INTO chequelist(dateofbuy,storeid,vendorid,prodid,quantity,price,action) VALUES (:dateofbuy,:storeid,:vendorid,:prodid,:quantity,:price,:action)");
+            res = QString::number(date.year())+"-"+QString::number(date.month())+"-"+QString::number(date.day());
+            query.bindValue(":dateofbuy", res);
+            query.bindValue(":storeid", storeList[ui->storeCB->currentIndex()]);
+            query.bindValue(":vendorid", vendorList[ui->vendorCB->currentIndex()]);
+            query.bindValue(":prodid", prodList[ui->prodCB->currentIndex()]);
+            query.bindValue(":quantity", quantity);
+            query.bindValue(":price", price);
+            if(ui->actionCBox->checkState() == Qt::Checked)
+            {
+                query.bindValue(":action", 1);
+            }
+            else
+            {
+                query.bindValue(":action", 0);
+            }
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            else
+            {
+                ui->priceEdit->clear();
+                ui->quantityEdit->clear();
+                ui->actionCBox->setCheckState(Qt::Unchecked);
+            }
+        }
+    }
 }

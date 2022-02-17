@@ -20,13 +20,13 @@ public:
 private slots:
     void on_reconnectButton_released();
 
-    void on_pushButton_released();
-
     void on_addVendorButton_released();
 
     void on_addStoreButton_released();
 
     void on_addProdButton_released();
+
+    void on_addButton_released();
 
 private:
     bool DBConnect();
