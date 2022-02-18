@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->dateEdit->setDate(QDate::currentDate());
     ui->actionCBox->setCheckState(Qt::Unchecked);
+    ui->roundled->setState(QRoundLedLabel::StateError);
+    ui->roundled->clear();
     on_reconnectButton_released();
 }
 
@@ -29,9 +31,14 @@ void MainWindow::on_reconnectButton_released()
     dbconnected = DBConnect();
     if(dbconnected)
     {
+        ui->roundled->setState(QRoundLedLabel::StateOk);
         GetStoreList();
         GetProdList();
         GetVendorList();
+    }
+    else
+    {
+        ui->roundled->setState(QRoundLedLabel::StateError);
     }
 }
 
