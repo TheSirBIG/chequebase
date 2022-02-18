@@ -20,14 +20,12 @@ SOURCES += \
     adddoubledialog.cpp \
     addsingledialog.cpp \
     main.cpp \
-    mainwindow.cpp \
-    qroundledlabel.cpp
+    mainwindow.cpp
 
 HEADERS += \
     adddoubledialog.h \
     addsingledialog.h \
-    mainwindow.h \
-    qroundledlabel.h
+    mainwindow.h
 
 FORMS += \
     adddoubledialog.ui \

@@ -36,7 +36,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    bool dbconnected = false;
+    bool dbconnected;
     QSqlError lastError;
     QSqlDatabase db;
     int *vendorList = nullptr;
