@@ -7,6 +7,7 @@ AddDoubleDialog::AddDoubleDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     outstring1 = outstring2 = "";
+    ui->lineEdit->setFocus();
 }
 
 AddDoubleDialog::~AddDoubleDialog()

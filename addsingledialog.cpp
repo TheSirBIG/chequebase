@@ -7,6 +7,7 @@ AddSingleDialog::AddSingleDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     outstring = "";
+    ui->lineEdit->setFocus();
 }
 
 AddSingleDialog::~AddSingleDialog()
