@@ -71,7 +71,7 @@
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>231</width>
+      <width>181</width>
       <height>22</height>
      </rect>
     </property>
@@ -92,9 +92,9 @@
    <widget class="QComboBox" name="prodCB">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>220</x>
       <y>110</y>
-      <width>231</width>
+      <width>281</width>
       <height>22</height>
      </rect>
     </property>
@@ -102,7 +102,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>220</x>
       <y>90</y>
       <width>47</width>
       <height>13</height>
