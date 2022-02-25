@@ -148,7 +148,7 @@ void MainWindow::GetProdList()
             str = query.value(1).toString();
             if(query.value(2) != "")
             {
-                str += ", ";
+                str += " : ";
                 str += query.value(2).toString();
             }
             prodList[i++] = query.value(0).toInt();
@@ -171,9 +171,10 @@ void MainWindow::on_addVendorButton_released()
         {
             QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
         }
+        GetVendorList();
+        ui->vendorCB->setCurrentIndex(ui->vendorCB->count()-1);
     }
     delete dialog;
-    GetVendorList();
 }
 
 void MainWindow::on_addStoreButton_released()
@@ -190,9 +191,10 @@ void MainWindow::on_addStoreButton_released()
         {
             QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
         }
+        GetStoreList();
+        ui->storeCB->setCurrentIndex(ui->storeCB->count()-1);
     }
     delete dialog;
-    GetStoreList();
 }
 
 void MainWindow::on_addProdButton_released()
@@ -217,9 +219,10 @@ void MainWindow::on_addProdButton_released()
         {
             QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
         }
+        GetProdList();
+        ui->prodCB->setCurrentIndex(ui->prodCB->count()-1);
     }
     delete dialog;
-    GetProdList();
 }
 
 void MainWindow::on_addButton_released()
