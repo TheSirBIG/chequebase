@@ -77,8 +77,8 @@ bool MainWindow::DBConnect()
                storeid int,\
                vendorid int,\
                prodid int,\
-               quantity float not null,\
-               price float not null,\
+               quantity double not null,\
+               price double not null,\
                action bool not null default false,\
                foreign key (storeid) references store(keyid),\
                foreign key (vendorid) references vendor(keyid),\
@@ -227,7 +227,7 @@ void MainWindow::on_addProdButton_released()
 
 void MainWindow::on_addButton_released()
 {
-    float quantity, price;
+    double quantity, price;
     bool ok;
     QString res;
     QDate date;
@@ -235,7 +235,7 @@ void MainWindow::on_addButton_released()
     res = ui->quantityEdit->text();
     for(int i=0; i<res.length(); i++)
         if(res[i] == ',') res[i] = '.';
-    quantity = res.toFloat(&ok);
+    quantity = res.toDouble(&ok);
     if(!ok)
     {
         QMessageBox::critical(this,"Error","Error in quantity edit\n");
@@ -246,7 +246,7 @@ void MainWindow::on_addButton_released()
         res = ui->priceEdit->text();
         for(int i=0; i<res.length(); i++)
             if(res[i] == ',') res[i] = '.';
-        price = res.toFloat(&ok);
+        price = res.toDouble(&ok);
         if(!ok)
         {
             QMessageBox::critical(this,"Error","Error in price edit\n");
