@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>809</width>
-    <height>295</height>
+    <width>891</width>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,7 +71,7 @@
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>221</width>
+      <width>231</width>
       <height>31</height>
      </rect>
     </property>
@@ -80,9 +80,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>90</y>
-      <width>91</width>
-      <height>16</height>
+      <y>80</y>
+      <width>211</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -92,9 +92,9 @@
    <widget class="QComboBox" name="prodCB">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>260</x>
       <y>110</y>
-      <width>291</width>
+      <width>341</width>
       <height>31</height>
      </rect>
     </property>
@@ -102,10 +102,10 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>90</y>
-      <width>101</width>
-      <height>16</height>
+      <x>260</x>
+      <y>80</y>
+      <width>271</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -115,9 +115,9 @@
    <widget class="QComboBox" name="vendorCB">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>610</x>
       <y>110</y>
-      <width>241</width>
+      <width>261</width>
       <height>31</height>
      </rect>
     </property>
@@ -125,10 +125,10 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>90</y>
-      <width>141</width>
-      <height>16</height>
+      <x>610</x>
+      <y>80</y>
+      <width>231</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -177,7 +177,7 @@
       <x>130</x>
       <y>160</y>
       <width>121</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -203,7 +203,7 @@
       <x>280</x>
       <y>160</y>
       <width>121</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -216,7 +216,7 @@
       <x>420</x>
       <y>160</y>
       <width>121</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -268,7 +268,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>809</width>
+     <width>891</width>
      <height>21</height>
     </rect>
    </property>
