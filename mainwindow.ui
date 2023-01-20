@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>777</width>
-    <height>263</height>
+    <width>809</width>
+    <height>295</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QPushButton" name="addVendorButton">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>120</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -32,8 +32,8 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -43,10 +43,10 @@
    <widget class="QPushButton" name="addProdButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>220</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -58,8 +58,8 @@
      <rect>
       <x>680</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -71,8 +71,8 @@
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>181</width>
-      <height>22</height>
+      <width>221</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
@@ -81,8 +81,8 @@
      <rect>
       <x>20</x>
       <y>90</y>
-      <width>47</width>
-      <height>13</height>
+      <width>91</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -92,20 +92,20 @@
    <widget class="QComboBox" name="prodCB">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>250</x>
       <y>110</y>
-      <width>281</width>
-      <height>22</height>
+      <width>291</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>250</x>
       <y>90</y>
-      <width>47</width>
-      <height>13</height>
+      <width>101</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -115,19 +115,19 @@
    <widget class="QComboBox" name="vendorCB">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>550</x>
       <y>110</y>
-      <width>231</width>
-      <height>22</height>
+      <width>241</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>550</x>
       <y>90</y>
-      <width>91</width>
+      <width>141</width>
       <height>16</height>
      </rect>
     </property>
@@ -140,8 +140,8 @@
      <rect>
       <x>20</x>
       <y>150</y>
-      <width>61</width>
-      <height>31</height>
+      <width>91</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
@@ -152,9 +152,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>81</width>
-      <height>20</height>
+      <y>200</y>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="clearButtonEnabled">
@@ -165,9 +165,9 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>190</y>
-      <width>81</width>
-      <height>20</height>
+      <y>200</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
@@ -176,7 +176,7 @@
      <rect>
       <x>130</x>
       <y>160</y>
-      <width>81</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
@@ -187,10 +187,10 @@
    <widget class="QDateEdit" name="dateEdit">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>190</y>
-      <width>110</width>
-      <height>22</height>
+      <x>280</x>
+      <y>200</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="calendarPopup">
@@ -200,9 +200,9 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>280</x>
       <y>160</y>
-      <width>81</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
@@ -213,9 +213,9 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>420</x>
       <y>160</y>
-      <width>81</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
@@ -226,10 +226,10 @@
    <widget class="QCheckBox" name="actionCBox">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>190</y>
-      <width>70</width>
-      <height>17</height>
+      <x>420</x>
+      <y>200</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -239,10 +239,10 @@
    <widget class="QPushButton" name="addButton">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>190</y>
-      <width>75</width>
-      <height>23</height>
+      <x>610</x>
+      <y>200</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -268,7 +268,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>777</width>
+     <width>809</width>
      <height>21</height>
     </rect>
    </property>
