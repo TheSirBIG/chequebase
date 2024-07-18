@@ -5,6 +5,17 @@
 #include "adddoubledialog.h"
 #include <QKeyEvent>
 
+//#define work_2k
+#define home_4k
+
+#ifdef work_2k
+    #define CB_SCALE 150
+#endif
+
+#ifdef home_4k
+    #define CB_SCALE (150*1.7)
+#endif
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -191,7 +202,9 @@ void MainWindow::GetVendorList()
             vendorCount++;
         }
     }
-    vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+//    vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+//    vendorListView->setFixedHeight(150*1.7);  //for 10 lines in combobox!!!
+    vendorListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
     vendorListView->installEventFilter(this);
     ApplyFilter(ui->vendorCB, vendorListView, vendorCount, &vendorStr);
 }
@@ -250,7 +263,9 @@ void MainWindow::GetProdList()
             prodCount++;
         }
     }
-    prodListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+//    prodListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+//    prodListView->setFixedHeight(150*1.7);  //for 10 lines in combobox!!!
+    prodListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
     prodListView->installEventFilter(this);
     ApplyFilter(ui->prodCB, prodListView, prodCount, &prodStr);
 }
