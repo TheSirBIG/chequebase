@@ -17,6 +17,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    bool eventFilter( QObject * inObject, QEvent * inEvent ) override;
+
 private slots:
     void on_reconnectButton_released();
 
@@ -33,6 +35,7 @@ private:
     void GetVendorList();
     void GetStoreList();
     void GetProdList();
+    void SetViewVisible(QListView *view, int count);
 
 private:
     Ui::MainWindow *ui;
@@ -42,6 +45,12 @@ private:
     int *vendorList = nullptr;
     int *storeList = nullptr;
     int *prodList = nullptr;
+
+    QListView *prodListView = nullptr;
+    QListView *vendorListView = nullptr;
+
+    int vendorCount = 0;
+    int prodCount = 0;
 
 };
 #endif // MAINWINDOW_H

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "addsingledialog.h"
 #include "adddoubledialog.h"
+#include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->roundled->setState(QRoundLedLabel::StateError);
     ui->roundled->clear();
     on_reconnectButton_released();
+
+    ui->prodCB->installEventFilter(this);
+    ui->vendorCB->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -22,7 +26,80 @@ MainWindow::~MainWindow()
     if(vendorList != nullptr) delete vendorList;
     if(storeList != nullptr) delete storeList;
     if(prodList != nullptr) delete prodList;
+    if(prodListView != nullptr) delete prodListView;
+    if(vendorListView != nullptr) delete vendorListView;
     delete ui;
+}
+
+bool MainWindow::eventFilter(QObject *inObject, QEvent *inEvent)
+{
+    static QString prodStr = "";
+    static QString vendorStr = "";
+//    std::cout << inObject->objectName().toStdString() << std::endl;
+    QString *currStr = nullptr;
+    QListView *currView = nullptr;
+    QComboBox *currCB = nullptr;
+    int currCount;
+
+    QString objName = inObject->objectName();
+    if((objName == "prodCB") || (objName == "prodListView"))
+    {
+        currStr = &prodStr;
+        currView = prodListView;
+        currCB = ui->prodCB;
+        currCount = prodCount;
+    }
+    else if((objName == "vendorCB") || (objName == "vendorListView"))
+    {
+        currStr = &vendorStr;
+        currView = vendorListView;
+        currCB = ui->vendorCB;
+        currCount = vendorCount;
+    }
+    else currStr = nullptr;
+
+    if(currStr != nullptr)
+        if(inEvent->type() == QEvent::KeyPress)
+        {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(inEvent);
+            bool backspace = (keyEvent->key() == Qt::Key_Backspace);
+            bool del = (keyEvent->key() == Qt::Key_Delete);
+
+            if((keyEvent->key() < 10000) || backspace || del) //exclude special keys, like CTRL
+            {
+                if(backspace)
+                {
+                    if(*currStr != "")
+                    {
+                        *currStr = currStr->remove(currStr->length()-1,1);
+                    }
+                }
+                else if(del)
+                {
+                    *currStr = "";
+                }
+                else
+                {
+                    *currStr += keyEvent->text();
+                }
+                for(int i=0; i<currCount; i++)
+                {
+                    QString str = currCB->itemText(i);
+                    bool b = str.contains(currStr,Qt::CaseInsensitive);
+                    if(!b) currView->setRowHidden(i,true);
+                            else currView->setRowHidden(i,false);
+                }
+                return true;
+            }
+            else return false;
+        } else
+        {
+            return false;
+        }
+    else
+    {
+        return QObject::eventFilter(inObject, inEvent);
+    }
 }
 
 void MainWindow::on_reconnectButton_released()
@@ -93,8 +170,14 @@ void MainWindow::GetVendorList()
     int i = 0;
 
     if(vendorList != nullptr) delete vendorList;
+//    if(vendorListView != nullptr) delete vendorListView;
     vendorList = nullptr;
+//    vendorListView = nullptr;
+    vendorCount = 0;
     ui->vendorCB->clear();
+    vendorListView = new QListView(ui->vendorCB);
+    vendorListView->setObjectName("vendorListView");
+    ui->vendorCB->setView(vendorListView);
     query = QSqlQuery(db);
     query.exec("select * from vendor");
     if(query.isSelect())
@@ -104,8 +187,11 @@ void MainWindow::GetVendorList()
         {
             vendorList[i++] = query.value(0).toInt();
             ui->vendorCB->addItem(query.value(1).toString());
+            vendorCount++;
         }
     }
+    vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+    vendorListView->installEventFilter(this);
 }
 
 void MainWindow::GetStoreList()
@@ -136,8 +222,14 @@ void MainWindow::GetProdList()
     int i = 0;
 
     if(prodList != nullptr) delete prodList;
+//    if(prodListView != nullptr) delete prodListView;
     prodList = nullptr;
+//    prodListView = nullptr;
+    prodCount = 0;
     ui->prodCB->clear();
+    prodListView = new QListView(ui->prodCB);
+    prodListView->setObjectName("prodListView");
+    ui->prodCB->setView(prodListView);
     query = QSqlQuery(db);
     query.exec("select * from prod");
     if(query.isSelect())
@@ -153,8 +245,16 @@ void MainWindow::GetProdList()
             }
             prodList[i++] = query.value(0).toInt();
             ui->prodCB->addItem(str);
+            prodCount++;
         }
     }
+    prodListView->setFixedHeight(150);  //for 10 lines in combobox!!!
+    prodListView->installEventFilter(this);
+}
+
+void MainWindow::SetViewVisible(QListView *view, int count)
+{
+    for(int i=0; i<count; i++) view->setRowHidden(i,false);
 }
 
 void MainWindow::on_addVendorButton_released()
@@ -281,6 +381,8 @@ void MainWindow::on_addButton_released()
                 ui->priceEdit->clear();
                 ui->quantityEdit->clear();
                 ui->actionCBox->setCheckState(Qt::Unchecked);
+                SetViewVisible(prodListView, prodCount);
+                SetViewVisible(vendorListView, vendorCount);
             }
         }
     }
