@@ -23,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     if(dbconnected) db.close();
-    if(vendorList != nullptr) delete vendorList;
-    if(storeList != nullptr) delete storeList;
-    if(prodList != nullptr) delete prodList;
+    if(vendorIDList != nullptr) delete vendorIDList;
+    if(storeIDList != nullptr) delete storeIDList;
+    if(prodIDList != nullptr) delete prodIDList;
     if(prodListView != nullptr) delete prodListView;
     if(vendorListView != nullptr) delete vendorListView;
     delete ui;
@@ -80,6 +80,7 @@ bool MainWindow::eventFilter(QObject *inObject, QEvent *inEvent)
                 {
                     *currStr += keyEvent->text();
                 }
+                /*
                 for(int i=0; i<currCount; i++)
                 {
                     QString str = currCB->itemText(i);
@@ -87,6 +88,8 @@ bool MainWindow::eventFilter(QObject *inObject, QEvent *inEvent)
                     if(!b) currView->setRowHidden(i,true);
                             else currView->setRowHidden(i,false);
                 }
+                */
+                ApplyFilter(currCB, currView, currCount, currStr);
                 return true;
             }
             else return false;
@@ -167,9 +170,9 @@ void MainWindow::GetVendorList()
     QSqlQuery query;
     int i = 0;
 
-    if(vendorList != nullptr) delete vendorList;
+    if(vendorIDList != nullptr) delete vendorIDList;
 //    if(vendorListView != nullptr) delete vendorListView;
-    vendorList = nullptr;
+    vendorIDList = nullptr;
 //    vendorListView = nullptr;
     vendorCount = 0;
     ui->vendorCB->clear();
@@ -180,16 +183,17 @@ void MainWindow::GetVendorList()
     query.exec("select * from vendor");
     if(query.isSelect())
     {
-        if(query.size()>0) vendorList = new int[query.size()];
+        if(query.size()>0) vendorIDList = new int[query.size()];
         while(query.next())
         {
-            vendorList[i++] = query.value(0).toInt();
+            vendorIDList[i++] = query.value(0).toInt();
             ui->vendorCB->addItem(query.value(1).toString());
             vendorCount++;
         }
     }
     vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
     vendorListView->installEventFilter(this);
+    ApplyFilter(ui->vendorCB, vendorListView, vendorCount, &vendorStr);
 }
 
 void MainWindow::GetStoreList()
@@ -197,17 +201,17 @@ void MainWindow::GetStoreList()
     QSqlQuery query;
     int i = 0;
 
-    if(storeList != nullptr) delete storeList;
-    storeList = nullptr;
+    if(storeIDList != nullptr) delete storeIDList;
+    storeIDList = nullptr;
     ui->storeCB->clear();
     query = QSqlQuery(db);
     query.exec("select * from store");
     if(query.isSelect())
     {
-        if(query.size()>0) storeList = new int[query.size()];
+        if(query.size()>0) storeIDList = new int[query.size()];
         while(query.next())
         {
-            storeList[i++] = query.value(0).toInt();
+            storeIDList[i++] = query.value(0).toInt();
             ui->storeCB->addItem(query.value(1).toString());
         }
     }
@@ -219,9 +223,9 @@ void MainWindow::GetProdList()
     QString str;
     int i = 0;
 
-    if(prodList != nullptr) delete prodList;
+    if(prodIDList != nullptr) delete prodIDList;
 //    if(prodListView != nullptr) delete prodListView;
-    prodList = nullptr;
+    prodIDList = nullptr;
 //    prodListView = nullptr;
     prodCount = 0;
     ui->prodCB->clear();
@@ -232,7 +236,7 @@ void MainWindow::GetProdList()
     query.exec("select * from prod");
     if(query.isSelect())
     {
-        if(query.size()>0) prodList = new int[query.size()];
+        if(query.size()>0) prodIDList = new int[query.size()];
         while(query.next())
         {
             str = query.value(1).toString();
@@ -241,19 +245,31 @@ void MainWindow::GetProdList()
                 str += " : ";
                 str += query.value(2).toString();
             }
-            prodList[i++] = query.value(0).toInt();
+            prodIDList[i++] = query.value(0).toInt();
             ui->prodCB->addItem(str);
             prodCount++;
         }
     }
     prodListView->setFixedHeight(150);  //for 10 lines in combobox!!!
     prodListView->installEventFilter(this);
+    ApplyFilter(ui->prodCB, prodListView, prodCount, &prodStr);
 }
 
 void MainWindow::SetViewVisible(QListView *view, int count, QString *filter)
 {
     *filter = "";
     for(int i=0; i<count; i++) view->setRowHidden(i,false);
+}
+
+void MainWindow::ApplyFilter(QComboBox *box, QListView *view, int count, QString *filter)
+{
+    for(int i=0; i<count; i++)
+    {
+        QString str = box->itemText(i);
+        bool b = str.contains(filter,Qt::CaseInsensitive);
+        if(!b) view->setRowHidden(i,true);
+                else view->setRowHidden(i,false);
+    }
 }
 
 void MainWindow::on_addVendorButton_released()
@@ -358,9 +374,9 @@ void MainWindow::on_addButton_released()
             query.prepare("INSERT INTO chequelist(dateofbuy,storeid,vendorid,prodid,quantity,price,action) VALUES (:dateofbuy,:storeid,:vendorid,:prodid,:quantity,:price,:action)");
             res = QString::number(date.year())+"-"+QString::number(date.month())+"-"+QString::number(date.day());
             query.bindValue(":dateofbuy", res);
-            query.bindValue(":storeid", storeList[ui->storeCB->currentIndex()]);
-            query.bindValue(":vendorid", vendorList[ui->vendorCB->currentIndex()]);
-            query.bindValue(":prodid", prodList[ui->prodCB->currentIndex()]);
+            query.bindValue(":storeid", storeIDList[ui->storeCB->currentIndex()]);
+            query.bindValue(":vendorid", vendorIDList[ui->vendorCB->currentIndex()]);
+            query.bindValue(":prodid", prodIDList[ui->prodCB->currentIndex()]);
             query.bindValue(":quantity", quantity);
             query.bindValue(":price", price);
             if(ui->actionCBox->checkState() == Qt::Checked)

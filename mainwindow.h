@@ -36,15 +36,16 @@ private:
     void GetStoreList();
     void GetProdList();
     void SetViewVisible(QListView *view, int count, QString *filter);
+    void ApplyFilter(QComboBox *box, QListView *view, int count, QString *filter);
 
 private:
     Ui::MainWindow *ui;
     bool dbconnected = false;
     QSqlError lastError;
     QSqlDatabase db;
-    int *vendorList = nullptr;
-    int *storeList = nullptr;
-    int *prodList = nullptr;
+    int *vendorIDList = nullptr;
+    int *storeIDList = nullptr;
+    int *prodIDList = nullptr;
 
     QListView *prodListView = nullptr;
     QListView *vendorListView = nullptr;
