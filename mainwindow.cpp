@@ -33,8 +33,6 @@ MainWindow::~MainWindow()
 
 bool MainWindow::eventFilter(QObject *inObject, QEvent *inEvent)
 {
-    static QString prodStr = "";
-    static QString vendorStr = "";
 //    std::cout << inObject->objectName().toStdString() << std::endl;
     QString *currStr = nullptr;
     QListView *currView = nullptr;
@@ -252,8 +250,9 @@ void MainWindow::GetProdList()
     prodListView->installEventFilter(this);
 }
 
-void MainWindow::SetViewVisible(QListView *view, int count)
+void MainWindow::SetViewVisible(QListView *view, int count, QString *filter)
 {
+    *filter = "";
     for(int i=0; i<count; i++) view->setRowHidden(i,false);
 }
 
@@ -381,8 +380,8 @@ void MainWindow::on_addButton_released()
                 ui->priceEdit->clear();
                 ui->quantityEdit->clear();
                 ui->actionCBox->setCheckState(Qt::Unchecked);
-                SetViewVisible(prodListView, prodCount);
-                SetViewVisible(vendorListView, vendorCount);
+                SetViewVisible(prodListView, prodCount, &prodStr);
+                SetViewVisible(vendorListView, vendorCount, &vendorStr);
             }
         }
     }

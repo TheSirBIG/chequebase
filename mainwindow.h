@@ -35,7 +35,7 @@ private:
     void GetVendorList();
     void GetStoreList();
     void GetProdList();
-    void SetViewVisible(QListView *view, int count);
+    void SetViewVisible(QListView *view, int count, QString *filter);
 
 private:
     Ui::MainWindow *ui;
@@ -52,5 +52,7 @@ private:
     int vendorCount = 0;
     int prodCount = 0;
 
+    QString prodStr = "";
+    QString vendorStr = "";
 };
 #endif // MAINWINDOW_H
