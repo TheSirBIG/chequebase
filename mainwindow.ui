@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>990</width>
+    <width>1027</width>
     <height>326</height>
    </rect>
   </property>
@@ -56,7 +56,7 @@
    <widget class="QPushButton" name="reconnectButton">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>730</x>
       <y>10</y>
       <width>81</width>
       <height>31</height>
@@ -94,7 +94,7 @@
      <rect>
       <x>260</x>
       <y>110</y>
-      <width>441</width>
+      <width>461</width>
       <height>31</height>
      </rect>
     </property>
@@ -118,9 +118,9 @@
    <widget class="QComboBox" name="vendorCB">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>730</x>
       <y>110</y>
-      <width>261</width>
+      <width>281</width>
       <height>31</height>
      </rect>
     </property>
@@ -128,7 +128,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>730</x>
       <y>80</y>
       <width>231</width>
       <height>21</height>
@@ -242,7 +242,7 @@
    <widget class="QPushButton" name="addButton">
     <property name="geometry">
      <rect>
-      <x>710</x>
+      <x>730</x>
       <y>200</y>
       <width>81</width>
       <height>31</height>
@@ -255,7 +255,7 @@
    <widget class="QRoundLedLabel" name="roundled">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>700</x>
       <y>10</y>
       <width>16</width>
       <height>16</height>
@@ -271,7 +271,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>990</width>
+     <width>1027</width>
      <height>21</height>
     </rect>
    </property>
