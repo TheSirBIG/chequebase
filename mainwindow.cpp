@@ -6,15 +6,15 @@
 #include <QKeyEvent>
 
 //#define work_2k
-#define home_4k
+//#define home_4k
 
-#ifdef work_2k
-    #define CB_SCALE 150
-#endif
+//#ifdef work_2k
+//    #define CB_SCALE 150
+//#endif
 
-#ifdef home_4k
-    #define CB_SCALE (150*1.7)
-#endif
+//#ifdef home_4k
+//    #define CB_SCALE (150*1.7)
+//#endif
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +29,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->prodCB->installEventFilter(this);
     ui->vendorCB->installEventFilter(this);
+
+    QSettings* iniFile = new QSettings(QApplication::applicationName()+".ini", QSettings::IniFormat);
+    iniFile->beginGroup("CBScale");
+//    std::cout << "Begin to read ini file" << std::endl;
+    CBScale = iniFile->value("CBScale","0").toInt();
+    std::cout << CBScale << std::endl;
+    if(CBScale == 0)
+    {
+//        std::cout << "No address value into ini-file, created default 'localhost'" << std::endl;
+        CBScale = 150;
+        iniFile->setValue("CBScale", CBScale);
+    }
+    iniFile->endGroup();
+    delete iniFile;
+    std::cout << CBScale << std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -204,7 +219,8 @@ void MainWindow::GetVendorList()
     }
 //    vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
 //    vendorListView->setFixedHeight(150*1.7);  //for 10 lines in combobox!!!
-    vendorListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
+//    vendorListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
+    vendorListView->setFixedHeight(CBScale);  //for 10 lines in combobox!!!
     vendorListView->installEventFilter(this);
     ApplyFilter(ui->vendorCB, vendorListView, vendorCount, &vendorStr);
 }
@@ -265,7 +281,8 @@ void MainWindow::GetProdList()
     }
 //    prodListView->setFixedHeight(150);  //for 10 lines in combobox!!!
 //    prodListView->setFixedHeight(150*1.7);  //for 10 lines in combobox!!!
-    prodListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
+//    prodListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
+    prodListView->setFixedHeight(CBScale);  //for 10 lines in combobox!!!
     prodListView->installEventFilter(this);
     ApplyFilter(ui->prodCB, prodListView, prodCount, &prodStr);
 }

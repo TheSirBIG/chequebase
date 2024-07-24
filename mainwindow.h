@@ -55,5 +55,7 @@ private:
 
     QString prodStr = "";
     QString vendorStr = "";
+
+    int CBScale = 150;
 };
 #endif // MAINWINDOW_H
