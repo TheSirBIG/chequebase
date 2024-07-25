@@ -304,6 +304,19 @@ void MainWindow::ApplyFilter(QComboBox *box, QListView *view, int count, QString
     }
 }
 
+int MainWindow::GetEmpty(QComboBox *box, int *IDList)
+{
+    int retval = -1;
+
+    for(int i=0; i<box->count(); i++)
+        if(box->itemText(i).contains("empty"))
+        {
+            retval = IDList[i];
+            break;
+        }
+    return retval;
+}
+
 void MainWindow::on_addVendorButton_released()
 {
     AddSingleDialog *dialog = new AddSingleDialog();
@@ -312,14 +325,36 @@ void MainWindow::on_addVendorButton_released()
     if(dialog->exec() == QDialog::Accepted)
     {
         QSqlQuery query = QSqlQuery(db);
-        query.prepare("insert into vendor(name) values(:name)");
-        query.bindValue(":name", dialog->outstring);
-        if(!query.exec())
+        int idx = GetEmpty(ui->vendorCB, vendorIDList);
+        if(idx == -1)
         {
-            QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            query.prepare("insert into vendor(name) values(:name)");
+            query.bindValue(":name", dialog->outstring);
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetVendorList();
+            ui->vendorCB->setCurrentIndex(ui->vendorCB->count()-1);
         }
-        GetVendorList();
-        ui->vendorCB->setCurrentIndex(ui->vendorCB->count()-1);
+        else
+        {
+            query.prepare("update vendor set vendor.name = :name WHERE (vendor.keyid = :keyid)");
+            query.bindValue(":name", dialog->outstring);
+            query.bindValue(":keyid", idx);
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetVendorList();
+            for(int i=0; i<ui->vendorCB->count(); i++)
+                if(idx == vendorIDList[i])
+                {
+                    idx = i;
+                    break;
+                }
+            ui->vendorCB->setCurrentIndex(idx);
+        }
     }
     delete dialog;
 }
@@ -332,14 +367,36 @@ void MainWindow::on_addStoreButton_released()
     if(dialog->exec() == QDialog::Accepted)
     {
         QSqlQuery query = QSqlQuery(db);
-        query.prepare("insert into store(name) values(:name)");
-        query.bindValue(":name", dialog->outstring);
-        if(!query.exec())
+        int idx = GetEmpty(ui->storeCB, storeIDList);
+        if(idx == -1)
         {
-            QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            query.prepare("insert into store(name) values(:name)");
+            query.bindValue(":name", dialog->outstring);
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetStoreList();
+            ui->storeCB->setCurrentIndex(ui->storeCB->count()-1);
         }
-        GetStoreList();
-        ui->storeCB->setCurrentIndex(ui->storeCB->count()-1);
+        else
+        {
+            query.prepare("update store set store.name = :name WHERE (store.keyid = :keyid)");
+            query.bindValue(":name", dialog->outstring);
+            query.bindValue(":keyid", idx);
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetStoreList();
+            for(int i=0; i<ui->storeCB->count(); i++)
+                if(idx == storeIDList[i])
+                {
+                    idx = i;
+                    break;
+                }
+            ui->storeCB->setCurrentIndex(idx);
+        }
     }
     delete dialog;
 }
@@ -351,23 +408,55 @@ void MainWindow::on_addProdButton_released()
     if(dialog->exec() == QDialog::Accepted)
     {
         QSqlQuery query = QSqlQuery(db);
-        if(dialog->outstring2 != "")
+        int idx = GetEmpty(ui->prodCB, prodIDList);
+        if(idx == -1)
         {
-            query.prepare("insert into prod(name,subname) values(:name,:subname)");
-            query.bindValue(":name", dialog->outstring1);
-            query.bindValue(":subname", dialog->outstring2);
+//            if(dialog->outstring2 != "")
+//            {
+                query.prepare("insert into prod(name,subname) values(:name,:subname)");
+                query.bindValue(":name", dialog->outstring1);
+                query.bindValue(":subname", dialog->outstring2);
+//            }
+//            else
+//            {
+//                query.prepare("insert into prod(name) values(:name)");
+//                query.bindValue(":name", dialog->outstring1);
+//            }
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetProdList();
+            ui->prodCB->setCurrentIndex(ui->prodCB->count()-1);
         }
         else
         {
-            query.prepare("insert into prod(name) values(:name)");
-            query.bindValue(":name", dialog->outstring1);
+//            if(dialog->outstring2 != "")
+//            {
+                query.prepare("update prod set prod.name = :name, prod.subname = :subname WHERE (prod.keyid = :keyid)");
+                query.bindValue(":name", dialog->outstring1);
+                query.bindValue(":subname", dialog->outstring2);
+                query.bindValue(":keyid", idx);
+//            }
+//            else
+//            {
+//                query.prepare("update prod set prod.name = :name, prod.subname = :subname WHERE (prod.keyid = :keyid)");
+//                query.bindValue(":name", dialog->outstring1);
+//                query.bindValue(":keyid", idx);
+//            }
+            if(!query.exec())
+            {
+                QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
+            }
+            GetProdList();
+            for(int i=0; i<ui->prodCB->count(); i++)
+                if(idx == prodIDList[i])
+                {
+                    idx = i;
+                    break;
+                }
+            ui->prodCB->setCurrentIndex(idx);
         }
-        if(!query.exec())
-        {
-            QMessageBox::critical(this,"Error","Query error:\n"+query.lastError().text());
-        }
-        GetProdList();
-        ui->prodCB->setCurrentIndex(ui->prodCB->count()-1);
     }
     delete dialog;
 }
@@ -433,4 +522,12 @@ void MainWindow::on_addButton_released()
             }
         }
     }
+}
+
+void MainWindow::on_pushButton_released()
+{
+    for(int i=0; i<ui->vendorCB->count(); i++)
+        std::cout << ui->vendorCB->itemText(i).toStdString() << std::endl;
+
+    std::cout << GetEmpty(ui->vendorCB, vendorIDList) << std::endl;
 }

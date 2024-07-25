@@ -30,6 +30,8 @@ private slots:
 
     void on_addButton_released();
 
+    void on_pushButton_released();
+
 private:
     bool DBConnect();
     void GetVendorList();
@@ -37,6 +39,7 @@ private:
     void GetProdList();
     void SetViewVisible(QListView *view, int count, QString *filter);
     void ApplyFilter(QComboBox *box, QListView *view, int count, QString *filter);
+    int GetEmpty(QComboBox *box, int *IDList);
 
 private:
     Ui::MainWindow *ui;
