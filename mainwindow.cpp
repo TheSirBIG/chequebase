@@ -523,11 +523,3 @@ void MainWindow::on_addButton_released()
         }
     }
 }
-
-void MainWindow::on_pushButton_released()
-{
-    for(int i=0; i<ui->vendorCB->count(); i++)
-        std::cout << ui->vendorCB->itemText(i).toStdString() << std::endl;
-
-    std::cout << GetEmpty(ui->vendorCB, vendorIDList) << std::endl;
-}

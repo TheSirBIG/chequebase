@@ -30,8 +30,6 @@ private slots:
 
     void on_addButton_released();
 
-    void on_pushButton_released();
-
 private:
     bool DBConnect();
     void GetVendorList();
