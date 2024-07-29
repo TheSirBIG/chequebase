@@ -37,6 +37,7 @@ private:
     void GetProdList();
     void SetViewVisible(QListView *view, int count, QString *filter);
     void ApplyFilter(QComboBox *box, QListView *view, int count, QString *filter);
+    QString RusToEng(QString *instr);
     int GetEmpty(QComboBox *box, int *IDList);
 
 private:

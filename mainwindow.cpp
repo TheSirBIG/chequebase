@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     iniFile->beginGroup("CBScale");
 //    std::cout << "Begin to read ini file" << std::endl;
     CBScale = iniFile->value("CBScale","0").toInt();
-    std::cout << CBScale << std::endl;
+//    std::cout << CBScale << std::endl;
     if(CBScale == 0)
     {
 //        std::cout << "No address value into ini-file, created default 'localhost'" << std::endl;
@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     iniFile->endGroup();
     delete iniFile;
-    std::cout << CBScale << std::endl;
+//    std::cout << CBScale << std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -295,13 +295,32 @@ void MainWindow::SetViewVisible(QListView *view, int count, QString *filter)
 
 void MainWindow::ApplyFilter(QComboBox *box, QListView *view, int count, QString *filter)
 {
+    QString rte = RusToEng(filter);
+
     for(int i=0; i<count; i++)
     {
         QString str = box->itemText(i);
-        bool b = str.contains(filter,Qt::CaseInsensitive);
+        bool b = str.contains(filter,Qt::CaseInsensitive) || str.contains(rte,Qt::CaseInsensitive);
         if(!b) view->setRowHidden(i,true);
                 else view->setRowHidden(i,false);
     }
+}
+
+QString MainWindow::RusToEng(QString *instr)
+{
+    static const QString indata  = "йцукенгшщзфывапролдячсмить";
+    static const QString outdata = "qwertyuiopasdfghjklzxcvbnm";
+    QString outstr = "";
+
+    if(*instr != "")
+    {
+        outstr = *instr;
+//        for(int i=0; i<instr->count(); i++)
+        for(int i=0; i<indata.count(); i++)
+            outstr = outstr.replace(indata[i],outdata[i],Qt::CaseInsensitive);
+    }
+
+    return  outstr;
 }
 
 int MainWindow::GetEmpty(QComboBox *box, int *IDList)
