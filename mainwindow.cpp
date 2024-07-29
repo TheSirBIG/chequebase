@@ -20,17 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    ui->dateEdit->setDate(QDate::currentDate());
-    ui->actionCBox->setCheckState(Qt::Unchecked);
-    ui->roundled->setState(QRoundLedLabel::StateError);
-    ui->roundled->clear();
-    on_reconnectButton_released();
-
-    ui->prodCB->installEventFilter(this);
-    ui->vendorCB->installEventFilter(this);
-
     QSettings* iniFile = new QSettings(QApplication::applicationName()+".ini", QSettings::IniFormat);
+    std::cout << iniFile->fileName().toStdString() << std::endl;
     iniFile->beginGroup("CBScale");
 //    std::cout << "Begin to read ini file" << std::endl;
     CBScale = iniFile->value("CBScale","0").toInt();
@@ -43,7 +34,16 @@ MainWindow::MainWindow(QWidget *parent)
     }
     iniFile->endGroup();
     delete iniFile;
-//    std::cout << CBScale << std::endl;
+
+    ui->setupUi(this);
+    ui->dateEdit->setDate(QDate::currentDate());
+    ui->actionCBox->setCheckState(Qt::Unchecked);
+    ui->roundled->setState(QRoundLedLabel::StateError);
+    ui->roundled->clear();
+    on_reconnectButton_released();
+
+    ui->prodCB->installEventFilter(this);
+    ui->vendorCB->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -220,6 +220,7 @@ void MainWindow::GetVendorList()
 //    vendorListView->setFixedHeight(150);  //for 10 lines in combobox!!!
 //    vendorListView->setFixedHeight(150*1.7);  //for 10 lines in combobox!!!
 //    vendorListView->setFixedHeight(CB_SCALE);  //for 10 lines in combobox!!!
+    std::cout << "iii" << std::endl;
     vendorListView->setFixedHeight(CBScale);  //for 10 lines in combobox!!!
     vendorListView->installEventFilter(this);
     ApplyFilter(ui->vendorCB, vendorListView, vendorCount, &vendorStr);
